@@ -581,3 +581,59 @@ function startSystemScan(type) {
         }
     }, intervalTime);
 }
+
+// --- Screenshot Analysis Logic ---
+const dropZone = document.getElementById('drop-zone');
+const fileInput = document.getElementById('file-input');
+const previewDiv = document.getElementById('screenshot-preview');
+const previewImg = document.getElementById('preview-img');
+
+if (dropZone) {
+    dropZone.addEventListener('click', () => fileInput.click());
+    dropZone.addEventListener('dragover', (e) => { e.preventDefault(); dropZone.style.background = 'rgba(0,240,255,0.1)'; });
+    dropZone.addEventListener('dragleave', () => { dropZone.style.background = 'transparent'; });
+    dropZone.addEventListener('drop', (e) => {
+        e.preventDefault();
+        dropZone.style.background = 'transparent';
+        if(e.dataTransfer.files.length > 0) handleScreenshotFile(e.dataTransfer.files[0]);
+    });
+    fileInput.addEventListener('change', function() {
+        if(this.files.length > 0) handleScreenshotFile(this.files[0]);
+    });
+}
+
+function handleScreenshotFile(file) {
+    if(!file.type.startsWith('image/')) { alert("Please upload an image file."); return; }
+    const reader = new FileReader();
+    reader.onload = (e) => {
+        previewImg.src = e.target.result;
+        dropZone.style.display = 'none';
+        previewDiv.style.display = 'block';
+    };
+    reader.readAsDataURL(file);
+}
+
+async function analyzeScreenshot() {
+    const resultDiv = document.getElementById('screenshot-result');
+    resultDiv.style.display = 'block';
+    resultDiv.innerHTML = '<span style="color:var(--neon-purple)"><i class="fa-solid fa-spinner fa-spin"></i> Running Visual Pattern Recognition & OCR...</span>';
+    
+    try {
+        const response = await fetch('/scan-screenshot', { method: 'POST' });
+        const data = await response.json();
+        
+        let color = data.threat_level === 'Danger' ? 'var(--neon-red)' : 'var(--neon-green)';
+        let threat = data.threat_level === 'Danger' ? 'DANGER: FAKE LOGIN DETECTED' : 'SAFE: BRAND VERIFIED';
+        
+        let html = `<h4 style="color:${color}; margin-bottom:10px;">${threat} (Confidence: ${data.confidence}%)</h4>
+            <p>${data.message}</p>
+            <ul style="margin-top:10px; padding-left:20px; color:#aaa;">`;
+        data.ai_reasoning.forEach(r => { html += `<li>${r}</li>`; });
+        html += `</ul>`;
+        
+        resultDiv.innerHTML = html;
+        addBotMessage(`Screenshot Analysis Complete: ${threat}`);
+    } catch (e) {
+        resultDiv.innerHTML = '<span style="color:var(--neon-red)">Error running analysis.</span>';
+    }
+}

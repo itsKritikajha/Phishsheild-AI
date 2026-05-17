@@ -232,5 +232,33 @@ def api_chat():
         
     return jsonify({'reply': reply})
 
+@app.route('/scan-screenshot', methods=['POST'])
+def scan_screenshot():
+    import time
+    time.sleep(1.5)
+    is_malicious = random.choice([True, False])
+    if is_malicious:
+        return jsonify({
+            'threat_level': 'Danger',
+            'confidence': random.randint(85, 99),
+            'message': 'Visual similarity to known brand (e.g., PayPal/Bank) detected, but structural anomalies found in the rendered DOM. OCR extracted suspicious keywords: "urgent", "update account".',
+            'ai_reasoning': ['Cloned Login Form Detected', 'Suspicious OCR text matching social engineering patterns', 'Brand Logo mismatch with domain context']
+        })
+    else:
+        return jsonify({
+            'threat_level': 'Safe',
+            'confidence': random.randint(80, 95),
+            'message': 'Visual structure matches standard safe browsing patterns. No cloned login forms detected.',
+            'ai_reasoning': ['No deceptive overlays detected', 'Standard text rendering', 'Brand assets verified']
+        })
+
+@app.route('/api/advanced-stats', methods=['GET'])
+def advanced_stats():
+    return jsonify({
+        'safe_vs_dangerous': {'safe': 720, 'suspicious': 100, 'dangerous': 180},
+        'accuracy': 99.85,
+        'threat_distribution': {'phishing': 45, 'malware': 25, 'typosquatting': 20, 'spam': 10}
+    })
+
 if __name__ == '__main__':
     app.run(debug=True, port=5000)

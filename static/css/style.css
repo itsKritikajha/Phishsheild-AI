@@ -267,3 +267,6 @@ input:checked + .slider:before { transform: translateX(22px); background-color: 
 
 .grid-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; }
 .av-controls { display: flex; flex-direction: column; gap: 10px; }
+
+/* Drag & Drop */
+.drag-drop-zone:hover { background: rgba(0, 240, 255, 0.1) !important; box-shadow: 0 0 20px rgba(0, 240, 255, 0.2); }

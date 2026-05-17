@@ -60,8 +60,9 @@
         <div class="scanner-card glass-panel">
             <div class="scanner-tabs">
                 <button class="tab-btn active" onclick="switchTab('url', event)"><i class="fa-solid fa-link"></i> URL Scanner</button>
-                <button class="tab-btn" onclick="switchTab('email', event)"><i class="fa-solid fa-envelope"></i> Email Scanner (Active)</button>
-                <button class="tab-btn" onclick="switchTab('site', event)"><i class="fa-solid fa-clone"></i> Clone Detection (Active)</button>
+                <button class="tab-btn" onclick="switchTab('email', event)"><i class="fa-solid fa-envelope"></i> Email Scanner</button>
+                <button class="tab-btn" onclick="switchTab('site', event)"><i class="fa-solid fa-clone"></i> Clone Detection</button>
+                <button class="tab-btn" onclick="switchTab('screenshot', event)"><i class="fa-solid fa-camera"></i> Screenshot OCR</button>
             </div>
 
             <!-- URL Scanner Tab -->
@@ -99,6 +100,21 @@
                 </div>
                 <button class="btn-neon mt-20" onclick="compareSites()">Run Clone Analysis</button>
                 <div id="site-result" class="mt-20" style="display:none; padding:15px; background:rgba(0,0,0,0.5); border-radius:8px; border:1px solid var(--glass-border);"></div>
+            </div>
+
+            <!-- Screenshot OCR Tab -->
+            <div id="tab-screenshot" class="tab-content" style="display: none;">
+                <div class="drag-drop-zone" id="drop-zone" style="border: 2px dashed var(--neon-blue); padding: 40px; text-align: center; border-radius: 12px; cursor: pointer; transition: 0.3s;">
+                    <i class="fa-solid fa-cloud-arrow-up text-3xl neon-blue mb-10"></i>
+                    <h3 style="font-family: var(--font-cyber);">Drag & Drop Screenshot Here</h3>
+                    <p style="color: #888; font-family: var(--font-ui);">or click to browse local files for AI Vision Analysis</p>
+                    <input type="file" id="file-input" style="display: none;" accept="image/*">
+                </div>
+                <div id="screenshot-preview" style="display:none; margin-top:20px; text-align:center;">
+                    <img id="preview-img" style="max-width:100%; border-radius:8px; border:1px solid var(--neon-purple); box-shadow:0 0 15px rgba(176, 38, 255, 0.3); max-height:300px; object-fit:contain;">
+                    <button class="btn-neon mt-20" onclick="analyzeScreenshot()" style="display:block; margin: 20px auto 0;"><i class="fa-solid fa-microchip"></i> Run Visual Pattern Recognition</button>
+                </div>
+                <div id="screenshot-result" class="mt-20" style="display:none; padding:20px; background:rgba(0,0,0,0.6); border-radius:8px; border:1px solid var(--glass-border);"></div>
             </div>
             
             <!-- Scanning Loader -->
