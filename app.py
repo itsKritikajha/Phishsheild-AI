@@ -1,4 +1,5 @@
 from flask import Flask, request, jsonify, render_template
+from flask_cors import CORS
 import joblib
 import re
 import os
@@ -9,6 +10,7 @@ import urllib.parse
 import numpy as np
 
 app = Flask(__name__)
+CORS(app)
 
 # Basic In-Memory Rate Limiting for Anti-Spam
 request_history = {}
