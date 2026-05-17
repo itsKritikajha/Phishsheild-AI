@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <style>
+    body { width: 350px; font-family: 'Inter', sans-serif; background: #050505; color: #fff; margin: 0; padding: 15px; }
+    h2 { color: #00f0ff; text-align: center; margin-top: 0; font-family: 'Orbitron', sans-serif;}
+    .status-box { background: rgba(255,255,255,0.05); padding: 15px; border-radius: 8px; text-align: center; margin-top: 15px; border: 1px solid rgba(0, 240, 255, 0.2);}
+    .btn-scan { background: linear-gradient(90deg, #00f0ff, #b026ff); color: #fff; border: none; padding: 12px; width: 100%; border-radius: 5px; font-weight: bold; cursor: pointer; margin-top: 15px; transition: 0.3s;}
+    .btn-scan:hover { filter: brightness(1.2); box-shadow: 0 0 10px #b026ff;}
+    .threat-safe { color: #00ff66; font-size: 1.4rem; font-weight: bold; text-shadow: 0 0 10px #00ff66;}
+    .threat-danger { color: #ff2a2a; font-size: 1.4rem; font-weight: bold; text-shadow: 0 0 10px #ff2a2a;}
+    .threat-suspicious { color: #ffcc00; font-size: 1.4rem; font-weight: bold; text-shadow: 0 0 10px #ffcc00;}
+  </style>
+</head>
+<body>
+  <h2>Phishield AI</h2>
+  <p style="text-align:center; font-size:12px; color:#aaa;">Enterprise Web Protection</p>
+  
+  <div class="status-box">
+    <p style="font-size: 12px; color: #888;">Current Page:</p>
+    <p id="current-url" style="font-size:11px; word-break: break-all; color:#ccc;">Loading...</p>
+    <hr style="border-color:rgba(255,255,255,0.1); margin:10px 0;">
+    <p style="font-size: 12px; color: #888; margin-bottom: 5px;">AI Threat Analysis:</p>
+    <p id="ai-status" style="font-size: 1.1rem;">Ready to Scan</p>
+    <p id="ai-confidence" style="font-size: 11px; color:#aaa; margin-top: 5px;"></p>
+  </div>
+
+  <button class="btn-scan" id="scan-btn">Scan Current Page</button>
+
+  <script src="popup.js"></script>
+</body>
+</html>

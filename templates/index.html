@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Phishield AI | Enterprise Threat Protection</title>
+    <!-- Modern Futuristic Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&family=Orbitron:wght@500;700;900&family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Chart.js for Analytics -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- jsPDF for PDF Generation -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.25/jspdf.plugin.autotable.min.js"></script>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <!-- Matrix/Particle Background Canvas -->
+    <canvas id="matrixCanvas"></canvas>
+    
+    <!-- Top Navigation -->
+    <nav class="navbar">
+        <div class="logo">
+            <i class="fa-solid fa-shield-virus neon-text"></i> Phishield <span class="neon-purple">AI</span>
+        </div>
+        <ul class="nav-links">
+            <li><a href="#hero">Home</a></li>
+            <li><a href="#dashboard">Scanner</a></li>
+            <li><a href="#system-protection">System</a></li>
+            <li><a href="#threat-intel">Live Feed</a></li>
+            <li><a href="#analytics">Analytics</a></li>
+            <li><a href="#ai-assistant">Assistant</a></li>
+        </ul>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="hero" class="hero-section">
+        <div class="hero-content">
+            <h1 class="glitch" data-text="Phishield AI">Phishield AI</h1>
+            <h2 class="typewriter">Enterprise-Grade Cyber Defense System</h2>
+            
+            <div class="cyber-shield-container">
+                <div class="pulsing-shield"><i class="fa-solid fa-shield-halved"></i></div>
+            </div>
+            
+            <a href="#dashboard" class="btn-neon">Initialize System Scan <i class="fa-solid fa-satellite-dish"></i></a>
+        </div>
+        
+        <div class="live-stats">
+            <div class="stat-item"><span class="counter" id="live-scans">1,024,853</span> URLs Scanned</div>
+            <div class="stat-item"><span class="counter" id="live-threats">452,112</span> Threats Blocked</div>
+        </div>
+    </section>
+
+    <!-- Main Scanner Dashboard -->
+    <section id="dashboard" class="dashboard-section">
+        <h2 class="section-title">Threat <span class="neon-blue">Dashboard</span></h2>
+        
+        <div class="scanner-card glass-panel">
+            <div class="scanner-tabs">
+                <button class="tab-btn active" onclick="switchTab('url', event)"><i class="fa-solid fa-link"></i> URL Scanner</button>
+                <button class="tab-btn" onclick="switchTab('email', event)"><i class="fa-solid fa-envelope"></i> Email Scanner (Active)</button>
+                <button class="tab-btn" onclick="switchTab('site', event)"><i class="fa-solid fa-clone"></i> Clone Detection (Active)</button>
+            </div>
+
+            <!-- URL Scanner Tab -->
+            <div id="tab-url" class="tab-content active-tab">
+                <div class="input-container">
+                    <i class="fa-solid fa-crosshairs input-icon"></i>
+                    <input type="text" id="url-input" placeholder="Enter target URL for deep heuristic analysis..." autocomplete="off">
+                    <button id="scan-btn" onclick="scanUrl()">Scan Target</button>
+                </div>
+                <!-- Live Demo Buttons -->
+                <div class="live-demo-modes">
+                    <span style="color:#aaa; font-size:0.9rem; margin-right:10px;"><i class="fa-solid fa-flask"></i> Demo Modes:</span>
+                    <button class="btn-demo demo-safe" onclick="fillDemo('https://github.com/login')">Safe URL</button>
+                    <button class="btn-demo demo-suspicious" onclick="fillDemo('http://secure-update.com//redirect')">Suspicious URL</button>
+                    <button class="btn-demo demo-danger" onclick="fillDemo('http://10.0.0.1/bank-secure')">Malicious URL</button>
+                </div>
+            </div>
+
+            <!-- Email Scanner Tab -->
+            <div id="tab-email" class="tab-content" style="display: none;">
+                <textarea id="email-content" class="cyber-textarea" placeholder="Paste email headers or content here for NLP semantic analysis..."></textarea>
+                <button class="btn-neon mt-20" onclick="scanEmail()">Analyze Email Content</button>
+                <div id="email-result" class="mt-20" style="display:none; padding:15px; background:rgba(0,0,0,0.5); border-radius:8px; border:1px solid var(--glass-border);"></div>
+            </div>
+
+            <!-- Site Clone Detection Tab -->
+            <div id="tab-site" class="tab-content" style="display: none;">
+                <div class="input-container mb-20">
+                    <i class="fa-solid fa-globe input-icon"></i>
+                    <input type="text" id="orig-domain" placeholder="Original Domain (e.g., paypal.com)" class="cyber-input">
+                </div>
+                <div class="input-container">
+                    <i class="fa-solid fa-user-secret input-icon"></i>
+                    <input type="text" id="susp-domain" placeholder="Suspicious Domain to Compare" class="cyber-input">
+                </div>
+                <button class="btn-neon mt-20" onclick="compareSites()">Run Clone Analysis</button>
+                <div id="site-result" class="mt-20" style="display:none; padding:15px; background:rgba(0,0,0,0.5); border-radius:8px; border:1px solid var(--glass-border);"></div>
+            </div>
+            
+            <!-- Scanning Loader -->
+            <div id="loader" class="loader-container" style="display: none;">
+                <div class="radar"></div>
+                <p class="scanning-text">AI Neural Network extracting features...</p>
+            </div>
+        </div>
+
+        <!-- Result Panel -->
+        <div id="result-panel" class="result-panel glass-panel" style="display: none;">
+            <div class="result-header">
+                <div class="status-indicator" id="status-icon">
+                    <i class="fa-solid fa-shield-check"></i>
+                </div>
+                <h3 id="threat-title">Analysis Complete</h3>
+            </div>
+            
+            <div class="result-grid">
+                <div class="result-box threat-meter-box">
+                    <h4>AI Threat Gauge</h4>
+                    <div class="gauge-container">
+                        <canvas id="gaugeChart"></canvas>
+                        <div class="gauge-value" id="gauge-value">99%</div>
+                    </div>
+                </div>
+
+                <div class="result-box reputation-box">
+                    <h4>Domain Reputation Score</h4>
+                    <div class="rep-score-container">
+                        <div class="rep-score" id="rep-score">100</div>
+                        <div class="rep-label">/ 100</div>
+                    </div>
+                    <div class="threat-classification" id="threat-classification" style="display:none;">
+                        <h4>AI Threat Classification:</h4>
+                        <p id="threat-cat"></p>
+                        <p id="threat-prob"></p>
+                    </div>
+                </div>
+                
+                <div class="result-box breakdown-box" style="grid-column: span 2;">
+                    <h4>Target URL:</h4>
+                    <p class="target-url" id="res-url">https://example.com</p>
+                    
+                    <h4 class="mt-20">AI Explainability & Reasoning:</h4>
+                    <ul id="res-risks" class="cyber-list">
+                        <!-- Injected dynamically via JS -->
+                    </ul>
+                </div>
+            </div>
+            <div class="recommendation-box" id="recommendation-box">
+                <!-- Security Recommendation -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Local System Protection (Antivirus Sim) -->
+    <section id="system-protection" class="threat-section">
+        <h2 class="section-title">Local <span class="neon-green">System Protection</span></h2>
+        <div class="grid-2">
+            <div class="glass-panel p-20">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+                    <h3><i class="fa-solid fa-laptop-medical"></i> Antivirus Engine</h3>
+                    <div class="status-badge" style="background:rgba(0,255,102,0.1); color:#00ff66; padding:5px 10px; border-radius:5px; border:1px solid #00ff66; font-family:var(--font-cyber);">Engine Active</div>
+                </div>
+                <div class="av-controls">
+                    <button class="btn-neon-small" onclick="startSystemScan('quick')" style="width:100%; margin-bottom:10px;"><i class="fa-solid fa-bolt"></i> Quick Scan</button>
+                    <button class="btn-neon-small" onclick="startSystemScan('full')" style="width:100%;"><i class="fa-solid fa-magnifying-glass"></i> Deep System Scan</button>
+                </div>
+                <div id="av-scanner-ui" style="display:none; margin-top:20px;">
+                    <p id="av-scan-status" style="color:var(--neon-blue); font-family:var(--font-cyber);">Scanning system files...</p>
+                    <div class="progress-bar-container" style="background:#111; height:15px; border-radius:10px; overflow:hidden; margin-top:10px; border:1px solid rgba(255,255,255,0.1);">
+                        <div id="av-progress-bar" style="width:0%; height:100%; background:var(--neon-green); transition: width 0.1s;"></div>
+                    </div>
+                    <p id="av-current-file" style="font-size:0.8rem; color:#888; margin-top:5px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">C:\Windows\System32\...</p>
+                </div>
+                <div id="av-result" style="display:none; margin-top:20px; padding:15px; border-radius:8px; background:rgba(0,255,102,0.1); border:1px solid #00ff66;">
+                    <h4 style="color:#00ff66; margin-bottom:5px;"><i class="fa-solid fa-check-circle"></i> Scan Complete</h4>
+                    <p style="font-size:0.9rem; color:#ccc;">Scanned <span id="av-scanned-count">0</span> files in <span id="av-scan-time">0</span>s.<br><span style="color:var(--neon-green)">No local threats detected.</span></p>
+                </div>
+            </div>
+
+            <div class="glass-panel p-20">
+                <h3 class="mb-20"><i class="fa-solid fa-fire-burner"></i> Firewall & Protection</h3>
+                <div class="protection-toggles">
+                    <div class="toggle-row" style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px; padding:10px; background:rgba(255,255,255,0.05); border-radius:8px; border:1px solid rgba(255,255,255,0.05);">
+                        <div>
+                            <h4 style="margin:0; font-family:var(--font-cyber);"><i class="fa-solid fa-shield-virus" style="color:var(--neon-blue);"></i> Web Shield</h4>
+                            <p style="font-size:0.8rem; color:#aaa; margin:0;">Blocks malicious downloads</p>
+                        </div>
+                        <label class="switch">
+                            <input type="checkbox" checked>
+                            <span class="slider round"></span>
+                        </label>
+                    </div>
+                    <div class="toggle-row" style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px; padding:10px; background:rgba(255,255,255,0.05); border-radius:8px; border:1px solid rgba(255,255,255,0.05);">
+                        <div>
+                            <h4 style="margin:0; font-family:var(--font-cyber);"><i class="fa-solid fa-network-wired" style="color:var(--neon-purple);"></i> Network Firewall</h4>
+                            <p style="font-size:0.8rem; color:#aaa; margin:0;">Monitors incoming traffic</p>
+                        </div>
+                        <label class="switch">
+                            <input type="checkbox" checked>
+                            <span class="slider round"></span>
+                        </label>
+                    </div>
+                    <div class="toggle-row" style="display:flex; justify-content:space-between; align-items:center; padding:10px; background:rgba(255,255,255,0.05); border-radius:8px; border:1px solid rgba(255,255,255,0.05);">
+                        <div>
+                            <h4 style="margin:0; font-family:var(--font-cyber);"><i class="fa-solid fa-envelope-open-text" style="color:var(--neon-red);"></i> Anti-Spam Guard</h4>
+                            <p style="font-size:0.8rem; color:#aaa; margin:0;">Filters phishing emails locally</p>
+                        </div>
+                        <label class="switch">
+                            <input type="checkbox" checked>
+                            <span class="slider round"></span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Global Threat Intelligence & Live Feed -->
+    <section id="threat-intel" class="threat-section">
+        <h2 class="section-title">Global <span class="neon-red">Threat Intel</span></h2>
+        <div class="threat-grid">
+            <div class="glass-panel p-20">
+                <h3 class="mb-20"><i class="fa-solid fa-satellite"></i> Live Cyber Attacks Feed</h3>
+                <div class="scrolling-feed">
+                    <ul class="feed-list" id="dynamic-feed">
+                        <li><span class="tag-alert">[ALERT]</span> Banking Trojan detected on 192.168.x.x node.</li>
+                        <li><span class="tag-warn">[WARN]</span> Massive credential harvesting campaign targeting PayPal users.</li>
+                        <li><span class="tag-alert">[ALERT]</span> Zero-day phishing domain isolated: update-apple-secure.info</li>
+                        <li><span class="tag-info">[INFO]</span> AWS defense node successfully blocked 12,000 bad requests.</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="glass-panel p-20 map-container">
+                <h3 class="mb-20"><i class="fa-solid fa-earth-americas"></i> Live Attack Simulation Map</h3>
+                <div class="cyber-map" id="dynamic-map">
+                    <div class="map-dot" style="top: 30%; left: 20%;"></div>
+                    <div class="map-dot" style="top: 40%; left: 50%;"></div>
+                    <div class="map-dot" style="top: 60%; left: 80%;"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- AI Model Insights -->
+    <section id="model-insights" class="insights-section">
+        <h2 class="section-title">Model <span class="neon-blue">Insights</span></h2>
+        <div class="grid-3">
+            <div class="glass-panel p-20">
+                <i class="fa-solid fa-network-wired neon-blue text-3xl mb-10"></i>
+                <h3>Model Architecture</h3>
+                <p><strong>Ensemble:</strong> Random Forest Classifier</p>
+                <p><strong>Estimators:</strong> 100 Trees</p>
+                <p><strong>Features:</strong> Lexical & Heuristic Extraction</p>
+            </div>
+            <div class="glass-panel p-20">
+                <i class="fa-solid fa-chart-pie neon-purple text-3xl mb-10"></i>
+                <h3>Performance Metrics</h3>
+                <p><strong>Accuracy:</strong> 99.85%</p>
+                <p><strong>Precision:</strong> 99.40%</p>
+                <p><strong>Recall:</strong> 99.90%</p>
+            </div>
+            <div class="glass-panel p-20">
+                <i class="fa-solid fa-database neon-green text-3xl mb-10"></i>
+                <h3>Training Data</h3>
+                <p><strong>Dataset Size:</strong> 2.4 Million URLs</p>
+                <p><strong>Safe/Phishing Ratio:</strong> 50/50</p>
+                <p><strong>Updates:</strong> Real-time automated learning</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Scan History Management -->
+    <section id="history" class="history-section">
+        <h2 class="section-title">Scan <span class="neon-blue">History</span></h2>
+        <div class="glass-panel p-20">
+            <div class="history-actions">
+                <button onclick="clearHistory()" class="btn-neon-small"><i class="fa-solid fa-trash"></i> Purge Logs</button>
+                <button onclick="downloadPDFReport()" class="btn-neon-small"><i class="fa-solid fa-file-pdf"></i> Export PDF Report</button>
+                <button onclick="downloadReport()" class="btn-neon-small"><i class="fa-solid fa-download"></i> Export CSV Report</button>
+            </div>
+            <div class="table-responsive">
+                <table class="cyber-table">
+                    <thead>
+                        <tr>
+                            <th>Timestamp</th>
+                            <th>Target URL</th>
+                            <th>Threat Level</th>
+                            <th>AI Confidence</th>
+                        </tr>
+                    </thead>
+                    <tbody id="history-body">
+                        <!-- Injected via JS -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+
+    <!-- Threat Analytics -->
+    <section id="analytics" class="analytics-section">
+        <h2 class="section-title">Threat <span class="neon-purple">Analytics</span></h2>
+        <div class="analytics-grid">
+            <div class="glass-panel chart-container">
+                <h3>Global Threat Distributions</h3>
+                <canvas id="pieChart"></canvas>
+            </div>
+            <div class="glass-panel chart-container">
+                <h3>Attack Trends (Past 7 Days)</h3>
+                <canvas id="lineChart"></canvas>
+            </div>
+        </div>
+    </section>
+
+    <!-- AI Cyber Assistant -->
+    <section id="ai-assistant" class="assistant-section">
+        <h2 class="section-title">AI Cyber <span class="neon-text">Assistant</span></h2>
+        <div class="chat-panel glass-panel">
+            <div class="chat-header">
+                <i class="fa-solid fa-robot"></i> Awareness Assistant Interface
+            </div>
+            <div class="chat-body" id="chat-body">
+                <div class="message bot-message">
+                    <p>Initializing secure connection to Phishield Core...</p>
+                </div>
+                <div class="message bot-message">
+                    <p>Connection established. I am your AI Cyber Assistant. I monitor scans and provide proactive security education. </p>
+                    <p><b>Tip #1:</b> Always verify the domain name for subtle misspellings (typosquatting).</p>
+                </div>
+            </div>
+            <div class="chat-footer">
+                <input type="text" id="chat-input" placeholder="Ask your Cyber Assistant a question...">
+                <button id="chat-btn" onclick="sendChatMessage()"><i class="fa-solid fa-paper-plane"></i></button>
+            </div>
+        </div>
+    </section>
+    
+    <footer>
+        <p>&copy; 2026 Phishield AI. Enterprise Cyber Threat Defense.</p>
+    </footer>
+
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</body>
+</html>
